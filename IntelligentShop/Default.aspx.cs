@@ -24,7 +24,7 @@ namespace IntelligentShop
             {
                 gvProduct.DataSource = getProductInventory();
                 gvProduct.DataBind();
-                //startThread();
+                startThread();
             }
         }
         /// <summary>
@@ -87,7 +87,7 @@ namespace IntelligentShop
         private void serverThread()
         {
             
-            string portNo = "";//Port no
+            string portNo = "8888";//Port no
             UdpClient udpClient = new UdpClient(Convert.ToInt32(portNo));
             while (isCheck)
             {

@@ -17,9 +17,29 @@
             </div>
         </div>
         <div class="col-md-8 well well-inverse2 f-cloud">
-             <div class="col-md-12">
-                <asp:GridView ID="gvCart" runat="server" CssClass="table table-condensed" AutoGenerateColumns="False" GridLines="None"></asp:GridView>
-             </div>       
+            <div class="col-md-12">
+                <p align="center">Shopping Cart</p>
+                <asp:GridView ID="gvCart" runat="server" CssClass="table table-condensed" AutoGenerateColumns="False" GridLines="None" EmptyDataText="ไม่มีสินค้า">
+                    <Columns>
+                        <asp:TemplateField>
+                            <ItemTemplate>
+                                <%# Container.DataItemIndex + 1 %>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="productName" HeaderText="ชื่อสินค้า" />
+                        <asp:BoundField DataField="quantity" HeaderText="จำนวน" />
+                        <asp:BoundField DataField="unitPrice" HeaderText="ราคาต่อหน่วย" />
+                        <asp:BoundField DataField="totalPrice" HeaderText="ราคารวม" />
+                    </Columns>
+                </asp:GridView>
+            </div>
+            <div>
+                <p></p>
+                <strong>
+                    <asp:Label ID="lblTotalText" runat="server" Text="Total:"></asp:Label>
+                    <asp:Label ID="lblTotal" runat="server" EnableViewState="false"></asp:Label>
+                </strong>
+            </div>
         </div>
     </div>
 </asp:Content>

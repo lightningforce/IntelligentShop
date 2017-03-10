@@ -6,6 +6,7 @@
 <head runat="server">
     <title></title>
     <link href="Css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="Css/amazongo.css" rel="stylesheet" type="text/css" />
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -44,6 +45,7 @@
     <!--</form>-->
     <script src="Script/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script src="Script/bootstrap.min.js" type="text/javascript"></script>
+
     <script>
         //var url = window.location;
         //// Will only work if string in href matches with location

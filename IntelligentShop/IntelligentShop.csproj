@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="Css\amazongo.css" />
     <Content Include="Site1.Master" />
     <None Include="Properties\PublishProfiles\test.pubxml" />
     <None Include="Web.Debug.config">

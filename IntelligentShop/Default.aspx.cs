@@ -47,7 +47,7 @@ namespace IntelligentShop
             {
                 gvProduct.DataSource = getProductInventory();
                 gvProduct.DataBind();
-                startThread();
+                //startThread();
                 _dt.Columns.AddRange(new DataColumn[4] { new DataColumn("productName"), new DataColumn("quantity"), new DataColumn("unitPrice"), new DataColumn("totalPrice") });
                 gvCart.DataSource = _dt;
                 gvCart.DataBind();
@@ -174,28 +174,148 @@ namespace IntelligentShop
             if (productID == 1)
             {
                 dt = getRange(productID);
+                if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+                {
+                    quantity = 0;
+                }
+                else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+                {
+                    quantity = 1;
+                }
+                else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+                {
+                    quantity = 2;
+                }
+                else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+                {
+                    quantity = 3;
+                }
+                else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+                {
+                    quantity = 4;
+                }
+                else
+                {
+                    quantity = 5;
+                }
                 dt.Clear();
             }
-            else if (productID == 2)
-            {
-                dt = getRange(productID);
-                dt.Clear();
-            }
-            else if (productID == 3)
-            {
-                dt = getRange(productID);
-                dt.Clear();
-            }
-            else if (productID == 4)
-            {
-                dt = getRange(productID);
-                dt.Clear();
-            }
-            else
-            {
-                dt = getRange(5);
-                dt.Clear();
-            }
+            //else if (productID == 2)
+            //{
+            //    dt = getRange(productID);
+            //    if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+            //    {
+            //        quantity = 0;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+            //    {
+            //        quantity = 1;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+            //    {
+            //        quantity = 2;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+            //    {
+            //        quantity = 3;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+            //    {
+            //        quantity = 4;
+            //    }
+            //    else
+            //    {
+            //        quantity = 5;
+            //    }
+            //    dt.Clear();
+            //}
+            //else if (productID == 3)
+            //{
+            //    dt = getRange(productID);
+            //    if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+            //    {
+            //        quantity = 0;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+            //    {
+            //        quantity = 1;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+            //    {
+            //        quantity = 2;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+            //    {
+            //        quantity = 3;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+            //    {
+            //        quantity = 4;
+            //    }
+            //    else
+            //    {
+            //        quantity = 5;
+            //    }
+            //    dt.Clear();
+            //}
+            //else if (productID == 4)
+            //{
+            //    dt = getRange(productID);
+            //    if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+            //    {
+            //        quantity = 0;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+            //    {
+            //        quantity = 1;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+            //    {
+            //        quantity = 2;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+            //    {
+            //        quantity = 3;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+            //    {
+            //        quantity = 4;
+            //    }
+            //    else
+            //    {
+            //        quantity = 5;
+            //    }
+            //    dt.Clear();
+            //}
+            //else
+            //{
+            //    dt = getRange(5);
+            //    if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+            //    {
+            //        quantity = 0;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+            //    {
+            //        quantity = 1;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+            //    {
+            //        quantity = 2;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+            //    {
+            //        quantity = 3;
+            //    }
+            //    else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+            //    {
+            //        quantity = 4;
+            //    }
+            //    else
+            //    {
+            //        quantity = 5;
+            //    }
+            //    dt.Clear();
+            //}
             return quantity;
         }
         private void addRow(string productName,int quanity,int unitPrice,int totalPrice)

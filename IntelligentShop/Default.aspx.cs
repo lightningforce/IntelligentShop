@@ -182,7 +182,7 @@ namespace IntelligentShop
                         addToCart(tempQuantityA, tempQuantityB, tempQuantityC, tempQuantityD, tempQuantityE);
                     }
                     tempQuantityA = _quantityA;
-                    tempQuantityB = _quantityB
+                    tempQuantityB = _quantityB;
                     tempQuantityC = _quantityC;
                     tempQuantityD = _quantityD;
                     tempQuantityE = _quantityE; 
@@ -191,15 +191,15 @@ namespace IntelligentShop
             udpClient.Close();
             Thread.CurrentThread.Abort();
         }
-        private void addToCart(int tempQuantityA,int tempQuantityB,int tempQuantityC,int tempQuantityB,int tempQuantityC)
+        private void addToCart(int tempQuantityA,int tempQuantityB,int tempQuantityC,int tempQuantityD,int tempQuantityE)
         {
-            if (quantity != 0)
-            {
-                addRow(productName,quantity,unitPrice,totalPrice);
+            //if (quantity != 0)
+            //{
+            //    addRow(productName,quantity,unitPrice,totalPrice);
 
-                _totalCartPrice = _totalCartPrice + totalPrice;
-                lblTotal.Text = _totalCartPrice.ToString();
-            }
+            //    _totalCartPrice = _totalCartPrice + totalPrice;
+            //    lblTotal.Text = _totalCartPrice.ToString();
+            //}
         }
         /// <summary>
         /// get quntity

@@ -123,6 +123,11 @@ namespace IntelligentShop
             int rangeC = 0;
             int rangeD = 0;
             int rangeE = 0;
+            int tempQuantityA = 0;
+            int tempQuantityB = 0;
+            int tempQuantityC = 0;
+            int tempQuantityD = 0;
+            int tempQuantityE = 0;
             string portNo = "1111";//Port no
             UdpClient udpClient = new UdpClient(Convert.ToInt32(portNo));
             while (_isCheck)
@@ -158,15 +163,49 @@ namespace IntelligentShop
                 _unitPriceE = getUnitPrice(_productNameE);
                 rangeE = int.Parse(word[9]);
                 _quantityE = getQuantity(getProductID(_productNameE), rangeE);
+
+                if (_quantityA != tempQuantityA || _quantityB != tempQuantityB 
+                || _quantityC != tempQuantityC || _quantityD != tempQuantityD 
+                || _quantityE != tempQuantityE)
+                {
+                    if (_quantityA < tempQuantityA)
+                    {
+                        //คืน
+                    }
+                    else
+                    {
+                        _totalPriceA = calculateTotalPrice(tempQuantityA,_unitPriceA);
+                        _totalPriceB = calculateTotalPrice(tempQuantityB, _unitPriceB);
+                        _totalPriceC = calculateTotalPrice(tempQuantityC, _unitPriceE);
+                        _totalPriceD = calculateTotalPrice(tempQuantityD, _unitPriceC);
+                        _totalPriceE = calculateTotalPrice(tempQuantityE, _unitPriceE);
+                        addToCart(tempQuantityA, tempQuantityB, tempQuantityC, tempQuantityD, tempQuantityE);
+                    }
+                    tempQuantityA = _quantityA;
+                    tempQuantityB = _quantityB
+                    tempQuantityC = _quantityC;
+                    tempQuantityD = _quantityD;
+                    tempQuantityE = _quantityE; 
+                }
             }
             udpClient.Close();
             Thread.CurrentThread.Abort();
         }
+        private void addToCart(int tempQuantityA,int tempQuantityB,int tempQuantityC,int tempQuantityB,int tempQuantityC)
+        {
+            if (quantity != 0)
+            {
+                addRow(productName,quantity,unitPrice,totalPrice);
+
+                _totalCartPrice = _totalCartPrice + totalPrice;
+                lblTotal.Text = _totalCartPrice.ToString();
+            }
+        }
         /// <summary>
-        /// get quantity based on product range
+        /// get quntity
         /// </summary>
         /// <param name="productID"></param>
-        /// <returns></returns>
+        /// <returns>quantity</returns>
         private int getQuantity(int productID,int range)
         {
             int quantity = 0;

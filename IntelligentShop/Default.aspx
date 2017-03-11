@@ -37,8 +37,8 @@
       </div>
                 <p></p>
                 <strong>
-                    <asp:Label ID="lblTotalText" runat="server" Text="Total:" Visible="false"></asp:Label>
-                    <asp:Label ID="lblTotal" runat="server" EnableViewState="false" Visible="false"></asp:Label>
+                    <asp:Label ID="lblTotalText" runat="server" Text="Total:" ></asp:Label>
+                    <asp:Label ID="lblTotal" runat="server" EnableViewState="false" Text="0"></asp:Label>
                 </strong>
     </div>
 </asp:Content>

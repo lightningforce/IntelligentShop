@@ -8,7 +8,7 @@
             <div class="col-md-6">
                 <div class="col-md-12">
                     <p align="center">จำนวนสินค้าคงเหลือ</p>
-                    <asp:GridView ID="gvProduct" runat="server" CssClass="table table-condensed"  AutoGenerateColumns="False" GridLines="None">
+                    <asp:GridView ID="gvProduct" runat="server" CssClass="table table-condensed" AutoGenerateColumns="False" GridLines="None">
                         <Columns>
                             <asp:BoundField DataField="productName" HeaderText="ชื่อสินค้า" />
                             <asp:BoundField DataField="amount" HeaderText="จำนวนคงเหลือ" />
@@ -33,12 +33,14 @@
                         </Columns>
                     </asp:GridView>
                 </div>
-             </div>
-      </div>
+            </div>
+            <div>
                 <p></p>
                 <strong>
-                    <asp:Label ID="lblTotalText" runat="server" Text="Total:" ></asp:Label>
+                    <asp:Label ID="lblTotalText" runat="server" Text="Total:"></asp:Label>
                     <asp:Label ID="lblTotal" runat="server" EnableViewState="false" Text="0"></asp:Label>
                 </strong>
+            </div>
+        </div>
     </div>
 </asp:Content>

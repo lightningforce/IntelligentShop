@@ -39,7 +39,12 @@ namespace IntelligentShop
         private int _totalPriceD = 0;
         private int _totalPriceE = 0;
         private int _totalCartPrice = 0;
-        private DataTable _dt = new DataTable();
+        private int _tempQuantityA = 0;
+        private int _tempQuantityB = 0;
+        private int _tempQuantityC = 0;
+        private int _tempQuantityD = 0;
+        private int _tempQuantityE = 0;
+        private DataTable _dt;
         
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -48,8 +53,10 @@ namespace IntelligentShop
                 gvProduct.DataSource = getProductInventory();
                 gvProduct.DataBind();
                 //startThread();
+                _dt = new DataTable();
                 _dt.Columns.AddRange(new DataColumn[4] { new DataColumn("productName"), new DataColumn("quantity"), new DataColumn("unitPrice"), new DataColumn("totalPrice") });
-                gvCart.DataSource = _dt;
+                ViewState["Cart"] = _dt;
+                gvCart.DataSource = (DataTable)ViewState["Cart"];
                 gvCart.DataBind();
             }
         }
@@ -112,6 +119,21 @@ namespace IntelligentShop
         /// </summary>
         private void serverThread()
         {
+           
+            string portNo = "1111";//Port no
+            UdpClient udpClient = new UdpClient(Convert.ToInt32(portNo));
+            while (_isCheck)
+            {
+                IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
+                string returnData = Encoding.ASCII.GetString(receiveBytes);
+                _textFromBoard = returnData.ToString();
+                //this.Invoke(new EventHandler(updateTest));       
+            }
+            udpClient.Close();
+        }
+        private void updateTest(object sender, EventArgs e)
+        {
             string[] word;
             string sensorA = string.Empty;
             string sensorB = string.Empty;
@@ -123,76 +145,84 @@ namespace IntelligentShop
             int rangeC = 0;
             int rangeD = 0;
             int rangeE = 0;
-            int tempQuantityA = 0;
-            int tempQuantityB = 0;
-            int tempQuantityC = 0;
-            int tempQuantityD = 0;
-            int tempQuantityE = 0;
-            string portNo = "1111";//Port no
-            UdpClient udpClient = new UdpClient(Convert.ToInt32(portNo));
-            while (_isCheck)
-            {
-                IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
-                string returnData = Encoding.ASCII.GetString(receiveBytes);
-                _textFromBoard = returnData.ToString();
-                //this.Invoke(new EventHandler(updatetest));
-                word = _textFromBoard.Split(',');
-                sensorA = word[0];
-                _productNameA = getProductName(sensorA);
-                _unitPriceA = getUnitPrice(_productNameA);
-                rangeA = int.Parse(word[1]);
-                _quantityA = getQuantity(getProductID(_productNameA),rangeA);
-                sensorB = word[2];
-                _productNameB = getProductName(sensorB);
-                _unitPriceB = getUnitPrice(_productNameB);
-                rangeB = int.Parse(word[3]);
-                _quantityB = getQuantity(getProductID(_productNameB), rangeB);
-                sensorC = word[4];
-                _productNameC = getProductName(sensorC);
-                _unitPriceC = getUnitPrice(_productNameC);
-                rangeC = int.Parse(word[5]);
-                _quantityC = getQuantity(getProductID(_productNameC), rangeC);
-                sensorD = word[6];
-                _productNameD = getProductName(sensorD);
-                _unitPriceD = getUnitPrice(_productNameD);
-                rangeD = int.Parse(word[7]);
-                _quantityD = getQuantity(getProductID(_productNameD), rangeD);
-                sensorE = word[8];
-                _productNameE = getProductName(sensorE);
-                _unitPriceE = getUnitPrice(_productNameE);
-                rangeE = int.Parse(word[9]);
-                _quantityE = getQuantity(getProductID(_productNameE), rangeE);
+            word = _textFromBoard.Split(',');
+            sensorA = word[0];
+            _productNameA = getProductName(sensorA);
+            _unitPriceA = getUnitPrice(_productNameA);
+            rangeA = int.Parse(word[1]);
+            _quantityA = getQuantity(getProductID(_productNameA), rangeA);
+            sensorB = word[2];
+            _productNameB = getProductName(sensorB);
+            _unitPriceB = getUnitPrice(_productNameB);
+            rangeB = int.Parse(word[3]);
+            _quantityB = getQuantity(getProductID(_productNameB), rangeB);
+            sensorC = word[4];
+            _productNameC = getProductName(sensorC);
+            _unitPriceC = getUnitPrice(_productNameC);
+            rangeC = int.Parse(word[5]);
+            _quantityC = getQuantity(getProductID(_productNameC), rangeC);
+            sensorD = word[6];
+            _productNameD = getProductName(sensorD);
+            _unitPriceD = getUnitPrice(_productNameD);
+            rangeD = int.Parse(word[7]);
+            _quantityD = getQuantity(getProductID(_productNameD), rangeD);
+            sensorE = word[8];
+            _productNameE = getProductName(sensorE);
+            _unitPriceE = getUnitPrice(_productNameE);
+            rangeE = int.Parse(word[9]);
+            _quantityE = getQuantity(getProductID(_productNameE), rangeE);
 
-                if (_quantityA != tempQuantityA || _quantityB != tempQuantityB 
-                || _quantityC != tempQuantityC || _quantityD != tempQuantityD 
-                || _quantityE != tempQuantityE)
+            if (_quantityA != _tempQuantityA || _quantityB != _tempQuantityB
+            || _quantityC != _tempQuantityC || _quantityD != _tempQuantityD
+            || _quantityE != _tempQuantityE)
+            {
+
+                if (_quantityA < _tempQuantityA)
                 {
-                    if (_quantityA < tempQuantityA)
-                    {
-                        //คืน
-                    }
-                    else
-                    {
-                        _totalPriceA = calculateTotalPrice(tempQuantityA,_unitPriceA);
-                        _totalPriceB = calculateTotalPrice(tempQuantityB, _unitPriceB);
-                        _totalPriceC = calculateTotalPrice(tempQuantityC, _unitPriceE);
-                        _totalPriceD = calculateTotalPrice(tempQuantityD, _unitPriceC);
-                        _totalPriceE = calculateTotalPrice(tempQuantityE, _unitPriceE);
-                        addToCart(tempQuantityA, tempQuantityB, tempQuantityC, tempQuantityD, tempQuantityE);
-                    }
-                    tempQuantityA = _quantityA;
-                    tempQuantityB = _quantityB;
-                    tempQuantityC = _quantityC;
-                    tempQuantityD = _quantityD;
-                    tempQuantityE = _quantityE; 
+                    //คืน
                 }
-            }
-            udpClient.Close();
-            Thread.CurrentThread.Abort();
+                else
+                {
+                    _totalPriceA = calculateTotalPrice(_quantityA, _unitPriceA);
+                    _totalPriceB = calculateTotalPrice(_quantityB, _unitPriceB);
+                    _totalPriceC = calculateTotalPrice(_quantityC, _unitPriceE);
+                    _totalPriceD = calculateTotalPrice(_quantityD, _unitPriceC);
+                    _totalPriceE = calculateTotalPrice(_quantityE, _unitPriceE);
+                    addToCart(_quantityA, _quantityB, _quantityC, _quantityD, _quantityE);
+
+                }
+                _totalCartPrice = _totalPriceA + _totalPriceB + _totalPriceC + _totalPriceD + _totalPriceE;
+                lblTotal.Text = _totalCartPrice.ToString();
+                _tempQuantityA = _quantityA;
+                _tempQuantityB = _quantityB;
+                _tempQuantityC = _quantityC;
+                _tempQuantityD = _quantityD;
+                _tempQuantityE = _quantityE;
+
+            }            
         }
-        private void addToCart(int tempQuantityA,int tempQuantityB,int tempQuantityC,int tempQuantityD,int tempQuantityE)
+        private void addToCart(int QuantityA,int QuantityB,int QuantityC,int QuantityD,int QuantityE)
         {
+            if (QuantityA != _tempQuantityA)
+            {
+                addRow(_productNameA, QuantityA, _unitPriceA, _totalPriceA);
+            }
+            if (QuantityB != _tempQuantityB)
+            {
+                addRow(_productNameB, QuantityB, _unitPriceB, _totalPriceB);
+            }
+            if (QuantityC != _tempQuantityC)
+            {
+                addRow(_productNameC, QuantityC, _unitPriceC, _totalPriceC);
+            }
+            if (QuantityD != _tempQuantityD)
+            {
+                addRow(_productNameD, QuantityD, _unitPriceD, _totalPriceD);
+            }
+            if (QuantityE != _tempQuantityE)
+            {
+                addRow(_productNameE, QuantityE, _unitPriceE, _totalPriceE);
+            }
             //if (quantity != 0)
             //{
             //    addRow(productName,quantity,unitPrice,totalPrice);
@@ -359,17 +389,19 @@ namespace IntelligentShop
         }
         private void addRow(string productName,int quanity,int unitPrice,int totalPrice)
         {
-            DataRow dr = _dt.NewRow();
+            DataTable dt = (DataTable)ViewState["Cart"];
+            DataRow dr = dt.NewRow();
             dr["productName"] = productName;
             dr["quantity"] = quanity;
             dr["unitPrice"] = unitPrice;
             dr["totalPrice"] = totalPrice;
-            gvCart.DataSource = _dt;
+            dt.Rows.Add(dr);
+            gvCart.DataSource = dt;
             gvCart.DataBind();     
         }
         private DataTable getRange(int productID)
         {
-            DataTable dt = null;
+            DataTable dt = new DataTable();
             string query = "select range1,range2,range3,range4,range5 from Range where productID = @productID";
             using (DataAccess dac = new DataAccess())
             {

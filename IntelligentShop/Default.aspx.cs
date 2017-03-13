@@ -136,8 +136,8 @@ namespace IntelligentShop
                 Thread.Sleep(2000);
                 
             }
-            udpClient.Close();          
-            Thread.CurrentThread.Abort();
+            udpClient.Close();
+            Thread.CurrentThread.Abort();          
         }
         private void updateTest()
         {
@@ -184,29 +184,156 @@ namespace IntelligentShop
             _tempQuantityC = int.Parse(dt.Rows[0]["tempQuantityC"].ToString());
             _tempQuantityD = int.Parse(dt.Rows[0]["tempQuantityD"].ToString());
             _tempQuantityE = int.Parse(dt.Rows[0]["tempQuantityE"].ToString());
-            if (_quantityA != _tempQuantityA || _quantityB != _tempQuantityB
-            || _quantityC != _tempQuantityC || _quantityD != _tempQuantityD
-            || _quantityE != _tempQuantityE)
+            _totalPriceA = calculateTotalPrice(_quantityA, _unitPriceA);
+            _totalPriceB = calculateTotalPrice(_quantityB, _unitPriceB);
+            _totalPriceC = calculateTotalPrice(_quantityC, _unitPriceE);
+            _totalPriceD = calculateTotalPrice(_quantityD, _unitPriceC);
+            _totalPriceE = calculateTotalPrice(_quantityE, _unitPriceE);
+            if (_quantityA != _tempQuantityA)
             {
-
-                if (_quantityA < _tempQuantityA)
+                if (hasInCart(_productNameA))
                 {
-                    //คืน
+                    if (_quantityA == 0)
+                    {
+                        deleteCart(_productNameA);
+                    }
+                    else
+                    {
+                        updateCart(_productNameA,_quantityA);
+                    }
                 }
                 else
                 {
-                    _totalPriceA = calculateTotalPrice(_quantityA, _unitPriceA);
-                    _totalPriceB = calculateTotalPrice(_quantityB, _unitPriceB);
-                    _totalPriceC = calculateTotalPrice(_quantityC, _unitPriceE);
-                    _totalPriceD = calculateTotalPrice(_quantityD, _unitPriceC);
-                    _totalPriceE = calculateTotalPrice(_quantityE, _unitPriceE);
-                    addToCart(_quantityA, _quantityB, _quantityC, _quantityD, _quantityE);
+                    insertToCart(_productNameA, _quantityA, _unitPriceA, _totalPriceA);
 
                 }
-                _totalCartPrice = _totalPriceA + _totalPriceB + _totalPriceC + _totalPriceD + _totalPriceE;
-                lblTotal.Text = _totalCartPrice.ToString();
-                updateTempQuantity(_quantityA, _quantityB, _quantityC, _quantityD, _quantityE);              
             }
+            if (_quantityB != _tempQuantityB)
+            {
+                if (hasInCart(_productNameB))
+                {
+                    if (_quantityB == 0)
+                    {
+                        deleteCart(_productNameB);
+                    }
+                    else
+                    {
+                        updateCart(_productNameB, _quantityB);
+                    }
+                }
+                else
+                {
+                    insertToCart(_productNameB, _quantityB, _unitPriceB, _totalPriceB);
+
+                }
+            }
+            if (_quantityC != _tempQuantityC)
+            {
+                if (hasInCart(_productNameC))
+                {
+                    if (_quantityC == 0)
+                    {
+                        deleteCart(_productNameC);
+                    }
+                    else
+                    {
+                        updateCart(_productNameC, _quantityC);
+                    }
+                }
+                else
+                {
+                    insertToCart(_productNameC, _quantityC, _unitPriceC, _totalPriceC);
+
+                }
+            }
+            if (_quantityD != _tempQuantityD)
+            {
+                if (hasInCart(_productNameD))
+                {
+                    if (_quantityD == 0)
+                    {
+                        deleteCart(_productNameD);
+                    }
+                    else
+                    {
+                        updateCart(_productNameD, _quantityD);
+                    }
+                }
+                else
+                {
+                    insertToCart(_productNameD, _quantityD, _unitPriceD, _totalPriceD);
+
+                }
+            }
+            if (_quantityE != _tempQuantityE)
+            {
+                if (hasInCart(_productNameE))
+                {
+                    if (_quantityE == 0)
+                    {
+                        deleteCart(_productNameE);
+                    }
+                    else
+                    {
+                        updateCart(_productNameE, _quantityE);
+                    }
+                }
+                else
+                {
+                    insertToCart(_productNameE, _quantityE, _unitPriceE, _totalPriceE);
+
+                }
+            }
+            updateTempQuantity(_quantityA, _quantityB, _quantityC, _quantityD, _quantityE);
+        }
+        public void updateCart(string productName,int quantity)
+        {
+            string query = "update Cart set quantity = @quantity where productName = @productName";
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbCommand cmd = dac.CreateCommand(query);
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Add(dac.CreateParameter("@quantity",quantity));
+                cmd.Parameters.Add(dac.CreateParameter("@productName",productName));
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public void deleteCart(string productName)
+        {
+            string query = "delete from Cart where productName = @productName";
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbCommand cmd = dac.CreateCommand(query);
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Add(dac.CreateParameter("@productName", productName));
+                cmd.ExecuteNonQuery();
+            }
+        }
+        private bool hasInCart(string productName)
+        {
+            bool has = false;
+            DataTable dt = new DataTable();
+            string query = "select productName from Cart where productName = @productName";
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbCommand cmd = dac.CreateCommand(query);
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Add(dac.CreateParameter("@productName", productName));
+                DbDataAdapter da = dac.CreateDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            if (dt.Rows.Count > 0)
+            {
+                has = true;
+            }
+            else
+            {
+                has = false;
+            }
+            return has;
         }
         private void addToCart(int QuantityA, int QuantityB, int QuantityC, int QuantityD, int QuantityE)
         {
@@ -546,6 +673,19 @@ namespace IntelligentShop
             }
             return dt;
         }
+        private int getTotalCartPrice()
+        {
+            int totalCartPrice;
+            string query = "select sum(totalPrice) from Cart";
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbCommand cmd = dac.CreateCommand(query);
+                cmd.CommandType = CommandType.Text;
+                totalCartPrice = int.Parse(cmd.ExecuteScalar().ToString());
+            }
+            return totalCartPrice;
+        }
         bool isFinish = true;
 
         protected void btnStart_Click(object sender, EventArgs e)
@@ -555,8 +695,10 @@ namespace IntelligentShop
 
         protected void btnStop_Click(object sender, EventArgs e)
         {
-            bool isFinish = false;
+            isFinish = false;
             displayCart();
+            _totalCartPrice = getTotalCartPrice();
+            lblTotal.Text = _totalCartPrice.ToString();
         }
     }
 }

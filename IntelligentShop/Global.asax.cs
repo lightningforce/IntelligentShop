@@ -17,7 +17,7 @@ namespace IntelligentShop
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.MapPageRoute("Default", "Default", "~/Default.aspx");
-            routes.MapPageRoute("About", "About", "~/About.aspx");
+            routes.MapPageRoute("Config", "Config", "~/Config.aspx");
         } 
     }
 }

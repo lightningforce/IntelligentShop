@@ -33,17 +33,15 @@
                             <asp:BoundField DataField="totalPrice" HeaderText="ราคารวม" />
                         </Columns>
                     </asp:GridView>
+                    <p></p>
+                    <strong>
+                        <asp:Label ID="lblTotalText" runat="server" Text="Total:"></asp:Label>
+                        <asp:Label ID="lblTotal" runat="server" EnableViewState="false" Text="0"></asp:Label>
+                    </strong>
                 </div>
             </div>
-            <div>
-                <p></p>
-                <strong>
-                    <asp:Label ID="lblTotalText" runat="server" Text="Total:"></asp:Label>
-                    <asp:Label ID="lblTotal" runat="server" EnableViewState="false" Text="0"></asp:Label>
-                </strong>
-            </div>
-            <asp:Button ID="btnStart" runat="server" Text="Start" Enabled="true" OnClick="btnStart_Click" />
-             <asp:Button ID="btnStop" runat="server" Text="Stop" Enabled="true" OnClick="btnStop_Click"/>
+            <asp:Button ID="btnStart" runat="server" Text="Start" Enabled="true" OnClick="btnStart_Click" CssClass="btn btn-success" />
+            <asp:Button ID="btnStop" runat="server" Text="Stop" Enabled="true" OnClick="btnStop_Click" CssClass="btn btn-danger" />
         </div>
     </div>
 </asp:Content>

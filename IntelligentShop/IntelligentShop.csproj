@@ -57,7 +57,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="About.aspx" />
+    <Content Include="Config.aspx" />
     <Content Include="Css\amazongo.css" />
     <Content Include="Site1.Master" />
     <None Include="Properties\PublishProfiles\test.pubxml" />
@@ -77,12 +77,12 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="About.aspx.cs">
-      <DependentUpon>About.aspx</DependentUpon>
+    <Compile Include="Config.aspx.cs">
+      <DependentUpon>Config.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="About.aspx.designer.cs">
-      <DependentUpon>About.aspx</DependentUpon>
+    <Compile Include="Config.aspx.designer.cs">
+      <DependentUpon>Config.aspx</DependentUpon>
     </Compile>
     <Compile Include="Dal\DataAccess.cs" />
     <Compile Include="Default.aspx.cs">

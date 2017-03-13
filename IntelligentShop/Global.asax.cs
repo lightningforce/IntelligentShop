@@ -18,6 +18,7 @@ namespace IntelligentShop
         {
             routes.MapPageRoute("Default", "Default", "~/Default.aspx");
             routes.MapPageRoute("Config", "Config", "~/Config.aspx");
+            routes.MapPageRoute("Reset", "Reset", "~/ResetSetting.aspx");
         } 
     }
 }

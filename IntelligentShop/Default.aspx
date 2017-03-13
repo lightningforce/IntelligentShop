@@ -4,6 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container">
+
         <div class="col-md-12">
             <div class="col-md-6">
                 <div class="col-md-12">
@@ -41,6 +42,8 @@
                     <asp:Label ID="lblTotal" runat="server" EnableViewState="false" Text="0"></asp:Label>
                 </strong>
             </div>
+            <asp:Button ID="btnStart" runat="server" Text="Start" Enabled="true" OnClick="btnStart_Click" />
+             <asp:Button ID="btnStop" runat="server" Text="Stop" Enabled="true" OnClick="btnStop_Click"/>
         </div>
     </div>
 </asp:Content>

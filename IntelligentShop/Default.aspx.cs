@@ -16,36 +16,36 @@ namespace IntelligentShop
 {
     public partial class Default : System.Web.UI.Page
     {
-        private bool _isCheck;
+        private bool _isCheck = true;
         private string _textFromBoard = string.Empty;
         private string _productNameA = string.Empty;
         private string _productNameB = string.Empty;
         private string _productNameC = string.Empty;
         private string _productNameD = string.Empty;
         private string _productNameE = string.Empty;
-        private int _unitPriceA = 0;
-        private int _unitPriceB = 0;
-        private int _unitPriceC = 0;
-        private int _unitPriceD = 0;
-        private int _unitPriceE = 0;
-        private int _quantityA = 0;
-        private int _quantityB = 0;
-        private int _quantityC = 0;
-        private int _quantityD = 0;
-        private int _quantityE = 0;
-        private int _totalPriceA = 0;
-        private int _totalPriceB = 0;
-        private int _totalPriceC = 0;
-        private int _totalPriceD = 0;
-        private int _totalPriceE = 0;
-        private int _totalCartPrice = 0;
-        private int _tempQuantityA = 0;
-        private int _tempQuantityB = 0;
-        private int _tempQuantityC = 0;
-        private int _tempQuantityD = 0;
-        private int _tempQuantityE = 0;
+        private int _unitPriceA;
+        private int _unitPriceB;
+        private int _unitPriceC;
+        private int _unitPriceD;
+        private int _unitPriceE;
+        private int _quantityA;
+        private int _quantityB;
+        private int _quantityC;
+        private int _quantityD;
+        private int _quantityE;
+        private int _totalPriceA;
+        private int _totalPriceB;
+        private int _totalPriceC;
+        private int _totalPriceD;
+        private int _totalPriceE ;
+        private int _totalCartPrice;
+        private int _tempQuantityA;
+        private int _tempQuantityB;
+        private int _tempQuantityC;
+        private int _tempQuantityD;
+        private int _tempQuantityE;
         private DataTable _dt;
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!this.IsPostBack)
@@ -104,7 +104,6 @@ namespace IntelligentShop
         private void startThread()
         {
             Thread threadUdp = new Thread(new ThreadStart(serverThread));
-            _isCheck = true;
             threadUdp.Start();
         }
         /// <summary>
@@ -119,20 +118,28 @@ namespace IntelligentShop
         /// </summary>
         private void serverThread()
         {
-           
+
             string portNo = "1111";//Port no
             UdpClient udpClient = new UdpClient(Convert.ToInt32(portNo));
-            while (_isCheck)
+            while (isFinish)
             {
-                IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
-                string returnData = Encoding.ASCII.GetString(receiveBytes);
-                _textFromBoard = returnData.ToString();
-                //this.Invoke(new EventHandler(updateTest));       
+                _isCheck = true;
+                while (_isCheck)
+                {
+                    IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                    Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
+                    string returnData = Encoding.ASCII.GetString(receiveBytes);
+                    _textFromBoard = returnData.ToString();
+                    //this.Invoke(new EventHandler(updateTest)); 
+                    updateTest();
+                }
+                Thread.Sleep(2000);
+                
             }
-            udpClient.Close();
+            udpClient.Close();          
+            Thread.CurrentThread.Abort();
         }
-        private void updateTest(object sender, EventArgs e)
+        private void updateTest()
         {
             string[] word;
             string sensorA = string.Empty;
@@ -171,7 +178,12 @@ namespace IntelligentShop
             _unitPriceE = getUnitPrice(_productNameE);
             rangeE = int.Parse(word[9]);
             _quantityE = getQuantity(getProductID(_productNameE), rangeE);
-
+            DataTable dt = getTempQuantity();
+            _tempQuantityA = int.Parse(dt.Rows[0]["tempQuantityA"].ToString());
+            _tempQuantityB = int.Parse(dt.Rows[0]["tempQuantityB"].ToString());
+            _tempQuantityC = int.Parse(dt.Rows[0]["tempQuantityC"].ToString());
+            _tempQuantityD = int.Parse(dt.Rows[0]["tempQuantityD"].ToString());
+            _tempQuantityE = int.Parse(dt.Rows[0]["tempQuantityE"].ToString());
             if (_quantityA != _tempQuantityA || _quantityB != _tempQuantityB
             || _quantityC != _tempQuantityC || _quantityD != _tempQuantityD
             || _quantityE != _tempQuantityE)
@@ -193,35 +205,30 @@ namespace IntelligentShop
                 }
                 _totalCartPrice = _totalPriceA + _totalPriceB + _totalPriceC + _totalPriceD + _totalPriceE;
                 lblTotal.Text = _totalCartPrice.ToString();
-                _tempQuantityA = _quantityA;
-                _tempQuantityB = _quantityB;
-                _tempQuantityC = _quantityC;
-                _tempQuantityD = _quantityD;
-                _tempQuantityE = _quantityE;
-
-            }            
+                updateTempQuantity(_quantityA, _quantityB, _quantityC, _quantityD, _quantityE);              
+            }
         }
-        private void addToCart(int QuantityA,int QuantityB,int QuantityC,int QuantityD,int QuantityE)
+        private void addToCart(int QuantityA, int QuantityB, int QuantityC, int QuantityD, int QuantityE)
         {
             if (QuantityA != _tempQuantityA)
             {
-                addRow(_productNameA, QuantityA, _unitPriceA, _totalPriceA);
+                insertToCart(_productNameA, QuantityA, _unitPriceA, _totalPriceA);
             }
             if (QuantityB != _tempQuantityB)
             {
-                addRow(_productNameB, QuantityB, _unitPriceB, _totalPriceB);
+                insertToCart(_productNameB, QuantityB, _unitPriceB, _totalPriceB);
             }
             if (QuantityC != _tempQuantityC)
             {
-                addRow(_productNameC, QuantityC, _unitPriceC, _totalPriceC);
+                insertToCart(_productNameC, QuantityC, _unitPriceC, _totalPriceC);
             }
             if (QuantityD != _tempQuantityD)
             {
-                addRow(_productNameD, QuantityD, _unitPriceD, _totalPriceD);
+                insertToCart(_productNameD, QuantityD, _unitPriceD, _totalPriceD);
             }
             if (QuantityE != _tempQuantityE)
             {
-                addRow(_productNameE, QuantityE, _unitPriceE, _totalPriceE);
+                insertToCart(_productNameE, QuantityE, _unitPriceE, _totalPriceE);
             }
             //if (quantity != 0)
             //{
@@ -230,13 +237,14 @@ namespace IntelligentShop
             //    _totalCartPrice = _totalCartPrice + totalPrice;
             //    lblTotal.Text = _totalCartPrice.ToString();
             //}
+            _isCheck = false;
         }
         /// <summary>
         /// get quntity
         /// </summary>
         /// <param name="productID"></param>
         /// <returns>quantity</returns>
-        private int getQuantity(int productID,int range)
+        private int getQuantity(int productID, int range)
         {
             int quantity = 0;
             DataTable dt = null;
@@ -387,7 +395,21 @@ namespace IntelligentShop
             //}
             return quantity;
         }
-        private void addRow(string productName,int quanity,int unitPrice,int totalPrice)
+        private void insertToCart(string productName, int quantity, int unitPrice, int totalPrice)
+        {
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbCommand cmd = dac.CreateCommand("usp_InsertToCart");
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(dac.CreateParameter("@productName", productName));
+                cmd.Parameters.Add(dac.CreateParameter("@quantity", quantity));
+                cmd.Parameters.Add(dac.CreateParameter("@unitPrice", unitPrice));
+                cmd.Parameters.Add(dac.CreateParameter("@totalPrice", totalPrice));
+                cmd.ExecuteNonQuery();
+            }
+        }
+        private void addRow(string productName, int quanity, int unitPrice, int totalPrice)
         {
             DataTable dt = (DataTable)ViewState["Cart"];
             DataRow dr = dt.NewRow();
@@ -397,7 +419,7 @@ namespace IntelligentShop
             dr["totalPrice"] = totalPrice;
             dt.Rows.Add(dr);
             gvCart.DataSource = dt;
-            gvCart.DataBind();     
+            gvCart.DataBind();
         }
         private DataTable getRange(int productID)
         {
@@ -481,6 +503,60 @@ namespace IntelligentShop
         {
             int totalPrice = quantity * unitPrice;
             return totalPrice;
+        }
+        private void displayCart()
+        {
+            DataTable dt = new DataTable();
+            string query = "select productName,quantity,unitPrice,totalPrice from Cart";
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbDataAdapter da = dac.CreateDataAdapter(query);
+                da.Fill(dt);
+            }
+            gvCart.DataSource = dt;
+            gvCart.DataBind();
+        }
+        private void updateTempQuantity(int QuantityA, int QuantityB, int QuantityC, int QuantityD, int QuantityE)
+        {
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbCommand cmd = dac.CreateCommand("usp_updateTempQuantity");
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(dac.CreateParameter("@tempQuantityA", QuantityA));
+                cmd.Parameters.Add(dac.CreateParameter("@tempQuantityB", QuantityB));
+                cmd.Parameters.Add(dac.CreateParameter("@tempQuantityC", QuantityC));
+                cmd.Parameters.Add(dac.CreateParameter("@tempQuantityD", QuantityD));
+                cmd.Parameters.Add(dac.CreateParameter("@tempQuantityE", QuantityE));
+                cmd.ExecuteNonQuery();
+            }
+        }
+        private DataTable getTempQuantity()
+        {
+            DataTable dt = new DataTable();
+            string query = "select tempQuantityA,tempQuantityB,tempQuantityC,tempQuantityD,tempQuantityE from TempQuantity";
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbCommand cmd = dac.CreateCommand(query);
+                cmd.CommandType = CommandType.Text;
+                DbDataAdapter da = dac.CreateDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+        bool isFinish = true;
+
+        protected void btnStart_Click(object sender, EventArgs e)
+        {
+            startThread();
+        }
+
+        protected void btnStop_Click(object sender, EventArgs e)
+        {
+            bool isFinish = false;
+            displayCart();
         }
     }
 }

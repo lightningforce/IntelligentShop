@@ -42,7 +42,7 @@
         </asp:ContentPlaceHolder>
     </div>
 
-    s</form>
+    </form>
     <script src="Script/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script src="Script/bootstrap.min.js" type="text/javascript"></script>
 

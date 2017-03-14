@@ -16,7 +16,7 @@ namespace IntelligentShop
 {
     public partial class Default : System.Web.UI.Page
     {
-        string _portNo = "1112";
+        string _portNo = "1113";
         private bool _isCheck = true;
         private string _textFromBoard = string.Empty;
         private string _productNameA = string.Empty;
@@ -38,7 +38,7 @@ namespace IntelligentShop
         private int _totalPriceB;
         private int _totalPriceC;
         private int _totalPriceD;
-        private int _totalPriceE ;
+        private int _totalPriceE;
         private int _totalCartPrice;
         private int _tempQuantityA;
         private int _tempQuantityB;
@@ -51,7 +51,7 @@ namespace IntelligentShop
         {
             if (!this.IsPostBack)
             {
-                
+
                 gvProduct.DataSource = getProductInventory();
                 gvProduct.DataBind();
 
@@ -145,10 +145,10 @@ namespace IntelligentShop
         {
             //wait for condition
         }
-        
+
         private void updateTest()
         {
-            
+
             DataTable dt = getTempQuantity();
             _tempQuantityA = int.Parse(dt.Rows[0]["tempQuantityA"].ToString());
             _tempQuantityB = int.Parse(dt.Rows[0]["tempQuantityB"].ToString());
@@ -171,7 +171,7 @@ namespace IntelligentShop
                     }
                     else
                     {
-                        updateCart(_productNameA,_quantityA);
+                        updateCart(_productNameA, _quantityA);
                     }
                 }
                 else
@@ -258,7 +258,7 @@ namespace IntelligentShop
             }
             updateTempQuantity(_quantityA, _quantityB, _quantityC, _quantityD, _quantityE);
         }
-        public void updateCart(string productName,int quantity)
+        public void updateCart(string productName, int quantity)
         {
             string query = "update Cart set quantity = @quantity where productName = @productName";
             using (DataAccess dac = new DataAccess())
@@ -266,8 +266,8 @@ namespace IntelligentShop
                 dac.Open(Provider.MSSQL);
                 DbCommand cmd = dac.CreateCommand(query);
                 cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Add(dac.CreateParameter("@quantity",quantity));
-                cmd.Parameters.Add(dac.CreateParameter("@productName",productName));
+                cmd.Parameters.Add(dac.CreateParameter("@quantity", quantity));
+                cmd.Parameters.Add(dac.CreateParameter("@productName", productName));
                 cmd.ExecuteNonQuery();
             }
         }
@@ -336,7 +336,7 @@ namespace IntelligentShop
             //    _totalCartPrice = _totalCartPrice + totalPrice;
             //    lblTotal.Text = _totalCartPrice.ToString();
             //}
-            
+
         }
         /// <summary>
         /// get quntity
@@ -649,7 +649,7 @@ namespace IntelligentShop
         {
             int totalCartPrice = 0;
             DataTable dt = new DataTable();
-            string query = "select sum(totalPrice) as totalCartPrice from Cart";
+            string query = "select sum(totalPrice) as totalCartPrice from Cart having sum(totalPrice) is not null";
             using (DataAccess dac = new DataAccess())
             {
                 dac.Open(Provider.MSSQL);
@@ -661,7 +661,6 @@ namespace IntelligentShop
             if (dt.Rows.Count != 0)
             {
                 totalCartPrice = int.Parse(dt.Rows[0]["totalCartPrice"].ToString());
-                
             }
             else
             {

@@ -40,8 +40,6 @@
                     </strong>
                 </div>
             </div>
-            <asp:Button ID="btnStart" runat="server" Text="Start" Enabled="true" OnClick="btnStart_Click" CssClass="btn btn-success" />
-            <asp:Button ID="btnStop" runat="server" Text="Stop" Enabled="true" OnClick="btnStop_Click" CssClass="btn btn-danger" />
         </div>
     </div>
 </asp:Content>

@@ -16,6 +16,7 @@ namespace IntelligentShop
 {
     public partial class Default : System.Web.UI.Page
     {
+        string _portNo = "1111";
         private bool _isCheck = true;
         private string _textFromBoard = string.Empty;
         private string _productNameA = string.Empty;
@@ -50,96 +51,41 @@ namespace IntelligentShop
         {
             if (!this.IsPostBack)
             {
+                
                 gvProduct.DataSource = getProductInventory();
                 gvProduct.DataBind();
-                //startThread();
+
+                udpListener();
+                wordSplitter();
+                updateTest();
+
                 _dt = new DataTable();
                 _dt.Columns.AddRange(new DataColumn[4] { new DataColumn("productName"), new DataColumn("quantity"), new DataColumn("unitPrice"), new DataColumn("totalPrice") });
                 ViewState["Cart"] = _dt;
                 gvCart.DataSource = (DataTable)ViewState["Cart"];
                 gvCart.DataBind();
+
+                displayCart();
+                _totalCartPrice = getTotalCartPrice();
+                lblTotal.Text = _totalCartPrice.ToString();
             }
         }
         /// <summary>
         /// get product amount in inventory
         /// </summary>
         /// <returns></returns>
-        private DataTable getProductInventory()
-        {
-            DataTable dt = new DataTable();
-            string query = "select productName,amount from vproductAmount";
-            using (DataAccess dac = new DataAccess())
-            {
-                dac.Open(Provider.MSSQL);
-                DbDataAdapter da = dac.CreateDataAdapter(query);
-                da.Fill(dt);
-            }
-            return dt;
-        }
-        /// <summary>
-        /// get product that remove from shelf
-        /// </summary>
-        private void checkProductAmount()
-        {
-            //wait for condition
-        }
-        /// <summary>
-        /// get ip address
-        /// </summary>
-        /// <returns></returns>
-        private string getIp()
-        {
-            IPHostEntry host = null;
-            host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (IPAddress ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    return ip.ToString();
-            }
-            return "192.168.0.0";
-        }
-        /// <summary>
-        /// start thread
-        /// </summary>
-        private void startThread()
-        {
-            Thread threadUdp = new Thread(new ThreadStart(serverThread));
-            threadUdp.Start();
-        }
-        /// <summary>
-        /// stop thread
-        /// </summary>
-        private void stopThread()
-        {
-            _isCheck = false;
-        }
-        /// <summary>
-        /// get string from board
-        /// </summary>
-        private void serverThread()
-        {
 
-            string portNo = "1111";//Port no
-            UdpClient udpClient = new UdpClient(Convert.ToInt32(portNo));
-            while (isFinish)
-            {
-                _isCheck = true;
-                while (_isCheck)
-                {
-                    IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                    Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
-                    string returnData = Encoding.ASCII.GetString(receiveBytes);
-                    _textFromBoard = returnData.ToString();
-                    //this.Invoke(new EventHandler(updateTest)); 
-                    updateTest();
-                }
-                Thread.Sleep(2000);
-                
-            }
+        private void udpListener()
+        {
+            UdpClient udpClient = new UdpClient(Convert.ToInt32(_portNo));
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
+            string returnData = Encoding.ASCII.GetString(receiveBytes);
+            _textFromBoard = returnData.ToString();
             udpClient.Close();
-            Thread.CurrentThread.Abort();          
         }
-        private void updateTest()
+
+        private void wordSplitter()
         {
             string[] word;
             string sensorA = string.Empty;
@@ -178,6 +124,31 @@ namespace IntelligentShop
             _unitPriceE = getUnitPrice(_productNameE);
             rangeE = int.Parse(word[9]);
             _quantityE = getQuantity(getProductID(_productNameE), rangeE);
+        }
+
+        private DataTable getProductInventory()
+        {
+            DataTable dt = new DataTable();
+            string query = "select productName,amount from vproductAmount";
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbDataAdapter da = dac.CreateDataAdapter(query);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+        /// <summary>
+        /// get product that remove from shelf
+        /// </summary>
+        private void checkProductAmount()
+        {
+            //wait for condition
+        }
+        
+        private void updateTest()
+        {
+            
             DataTable dt = getTempQuantity();
             _tempQuantityA = int.Parse(dt.Rows[0]["tempQuantityA"].ToString());
             _tempQuantityB = int.Parse(dt.Rows[0]["tempQuantityB"].ToString());
@@ -189,6 +160,7 @@ namespace IntelligentShop
             _totalPriceC = calculateTotalPrice(_quantityC, _unitPriceE);
             _totalPriceD = calculateTotalPrice(_quantityD, _unitPriceC);
             _totalPriceE = calculateTotalPrice(_quantityE, _unitPriceE);
+
             if (_quantityA != _tempQuantityA)
             {
                 if (hasInCart(_productNameA))
@@ -364,7 +336,7 @@ namespace IntelligentShop
             //    _totalCartPrice = _totalCartPrice + totalPrice;
             //    lblTotal.Text = _totalCartPrice.ToString();
             //}
-            _isCheck = false;
+            
         }
         /// <summary>
         /// get quntity
@@ -685,20 +657,6 @@ namespace IntelligentShop
                 totalCartPrice = int.Parse(cmd.ExecuteScalar().ToString());
             }
             return totalCartPrice;
-        }
-        bool isFinish = true;
-
-        protected void btnStart_Click(object sender, EventArgs e)
-        {
-            startThread();
-        }
-
-        protected void btnStop_Click(object sender, EventArgs e)
-        {
-            isFinish = false;
-            displayCart();
-            _totalCartPrice = getTotalCartPrice();
-            lblTotal.Text = _totalCartPrice.ToString();
         }
     }
 }

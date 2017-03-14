@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
+    <meta http-equiv="refresh" content="3">
     <link href="Css/bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="Css/amazongo.css" rel="stylesheet" type="text/css" />
     <asp:ContentPlaceHolder ID="head" runat="server">

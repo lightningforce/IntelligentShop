@@ -16,7 +16,7 @@ namespace IntelligentShop
 {
     public partial class Default : System.Web.UI.Page
     {
-        string _portNo = "1111";
+        string _portNo = "1112";
         private bool _isCheck = true;
         private string _textFromBoard = string.Empty;
         private string _productNameA = string.Empty;

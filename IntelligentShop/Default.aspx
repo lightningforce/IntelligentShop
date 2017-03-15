@@ -6,7 +6,7 @@
     <div class="container">
 
         <div class="col-md-12">
-            <div class="col-md-6">
+            <!--<div class="col-md-6">
                 <div class="col-md-12">
                     <p align="center">จำนวนสินค้าคงเหลือ</p>
                     <asp:GridView ID="gvProduct" runat="server" CssClass="table table-condensed" AutoGenerateColumns="False" GridLines="None">
@@ -16,7 +16,7 @@
                         </Columns>
                     </asp:GridView>
                 </div>
-            </div>
+            </div>-->
             <div class="col-md-6">
                 <div class="col-md-12">
                     <p align="center">Shopping Cart</p>

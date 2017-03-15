@@ -16,7 +16,7 @@ namespace IntelligentShop
 {
     public partial class Default : System.Web.UI.Page
     {
-        string _portNo = "1113";
+        string _portNo = "3333";
         private bool _isCheck = true;
         private string _textFromBoard = string.Empty;
         private string _productNameA = string.Empty;
@@ -157,8 +157,8 @@ namespace IntelligentShop
             _tempQuantityE = int.Parse(dt.Rows[0]["tempQuantityE"].ToString());
             _totalPriceA = calculateTotalPrice(_quantityA, _unitPriceA);
             _totalPriceB = calculateTotalPrice(_quantityB, _unitPriceB);
-            _totalPriceC = calculateTotalPrice(_quantityC, _unitPriceE);
-            _totalPriceD = calculateTotalPrice(_quantityD, _unitPriceC);
+            _totalPriceC = calculateTotalPrice(_quantityC, _unitPriceC);
+            _totalPriceD = calculateTotalPrice(_quantityD, _unitPriceD);
             _totalPriceE = calculateTotalPrice(_quantityE, _unitPriceE);
 
             if (_quantityA != _tempQuantityA)
@@ -171,7 +171,7 @@ namespace IntelligentShop
                     }
                     else
                     {
-                        updateCart(_productNameA, _quantityA);
+                        updateCart(_productNameA, _quantityA,_totalPriceA);
                     }
                 }
                 else
@@ -190,7 +190,7 @@ namespace IntelligentShop
                     }
                     else
                     {
-                        updateCart(_productNameB, _quantityB);
+                        updateCart(_productNameB, _quantityB,_totalPriceB);
                     }
                 }
                 else
@@ -209,12 +209,12 @@ namespace IntelligentShop
                     }
                     else
                     {
-                        updateCart(_productNameC, _quantityC);
+                        updateCart(_productNameC, _quantityC,_totalPriceC);
                     }
                 }
                 else
                 {
-                    insertToCart(_productNameC, _quantityC, _unitPriceC, _totalPriceC);
+                    insertToCart(_productNameC, _quantityC, _unitPriceC,_totalPriceC);
 
                 }
             }
@@ -228,7 +228,7 @@ namespace IntelligentShop
                     }
                     else
                     {
-                        updateCart(_productNameD, _quantityD);
+                        updateCart(_productNameD, _quantityD,_totalPriceD);
                     }
                 }
                 else
@@ -247,7 +247,7 @@ namespace IntelligentShop
                     }
                     else
                     {
-                        updateCart(_productNameE, _quantityE);
+                        updateCart(_productNameE, _quantityE,_totalPriceE);
                     }
                 }
                 else
@@ -258,9 +258,9 @@ namespace IntelligentShop
             }
             updateTempQuantity(_quantityA, _quantityB, _quantityC, _quantityD, _quantityE);
         }
-        public void updateCart(string productName, int quantity)
+        public void updateCart(string productName, int quantity,int totalPrice)
         {
-            string query = "update Cart set quantity = @quantity where productName = @productName";
+            string query = "update Cart set quantity = @quantity,totalPrice = @totalPrice where productName = @productName";
             using (DataAccess dac = new DataAccess())
             {
                 dac.Open(Provider.MSSQL);
@@ -268,6 +268,7 @@ namespace IntelligentShop
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.Add(dac.CreateParameter("@quantity", quantity));
                 cmd.Parameters.Add(dac.CreateParameter("@productName", productName));
+                cmd.Parameters.Add(dac.CreateParameter("@totalPrice", totalPrice));
                 cmd.ExecuteNonQuery();
             }
         }
@@ -350,23 +351,23 @@ namespace IntelligentShop
             if (productID == 1)
             {
                 dt = getRange(productID);
-                if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+                if (range <= int.Parse(dt.Rows[0]["range1"].ToString()))
                 {
                     quantity = 0;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range1"].ToString()) && range <= int.Parse(dt.Rows[0]["range2"].ToString()))
                 {
                     quantity = 1;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range2"].ToString()) && range <= int.Parse(dt.Rows[0]["range3"].ToString()))
                 {
                     quantity = 2;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range3"].ToString()) && range <= int.Parse(dt.Rows[0]["range4"].ToString()))
                 {
                     quantity = 3;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range4"].ToString()) && range <= int.Parse(dt.Rows[0]["range5"].ToString()))
                 {
                     quantity = 4;
                 }
@@ -379,23 +380,23 @@ namespace IntelligentShop
             else if (productID == 2)
             {
                 dt = getRange(productID);
-                if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+                if (range <= int.Parse(dt.Rows[0]["range1"].ToString()))
                 {
                     quantity = 0;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range1"].ToString()) && range <= int.Parse(dt.Rows[0]["range2"].ToString()))
                 {
                     quantity = 1;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range2"].ToString()) && range <= int.Parse(dt.Rows[0]["range3"].ToString()))
                 {
                     quantity = 2;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range3"].ToString()) && range <= int.Parse(dt.Rows[0]["range4"].ToString()))
                 {
                     quantity = 3;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range4"].ToString()) && range <= int.Parse(dt.Rows[0]["range5"].ToString()))
                 {
                     quantity = 4;
                 }
@@ -408,23 +409,23 @@ namespace IntelligentShop
             else if (productID == 3)
             {
                 dt = getRange(productID);
-                if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+                if (range <= int.Parse(dt.Rows[0]["range1"].ToString()))
                 {
                     quantity = 0;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range1"].ToString()) && range <= int.Parse(dt.Rows[0]["range2"].ToString()))
                 {
                     quantity = 1;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range2"].ToString()) && range <= int.Parse(dt.Rows[0]["range3"].ToString()))
                 {
                     quantity = 2;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range3"].ToString()) && range <= int.Parse(dt.Rows[0]["range4"].ToString()))
                 {
                     quantity = 3;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range4"].ToString()) && range <= int.Parse(dt.Rows[0]["range5"].ToString()))
                 {
                     quantity = 4;
                 }
@@ -437,23 +438,23 @@ namespace IntelligentShop
             else if (productID == 4)
             {
                 dt = getRange(productID);
-                if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+                if (range <= int.Parse(dt.Rows[0]["range1"].ToString()))
                 {
                     quantity = 0;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range1"].ToString()) && range <= int.Parse(dt.Rows[0]["range2"].ToString()))
                 {
                     quantity = 1;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range2"].ToString()) && range <= int.Parse(dt.Rows[0]["range3"].ToString()))
                 {
                     quantity = 2;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range3"].ToString()) && range <= int.Parse(dt.Rows[0]["range4"].ToString()))
                 {
                     quantity = 3;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range4"].ToString()) && range <= int.Parse(dt.Rows[0]["range5"].ToString()))
                 {
                     quantity = 4;
                 }
@@ -466,23 +467,23 @@ namespace IntelligentShop
             else
             {
                 dt = getRange(5);
-                if (range < int.Parse(dt.Rows[0]["range1"].ToString()))
+                if (range <= int.Parse(dt.Rows[0]["range1"].ToString()))
                 {
                     quantity = 0;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range1"].ToString()) && range < int.Parse(dt.Rows[0]["range2"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range1"].ToString()) && range <= int.Parse(dt.Rows[0]["range2"].ToString()))
                 {
                     quantity = 1;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range2"].ToString()) && range < int.Parse(dt.Rows[0]["range3"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range2"].ToString()) && range <= int.Parse(dt.Rows[0]["range3"].ToString()))
                 {
                     quantity = 2;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range3"].ToString()) && range < int.Parse(dt.Rows[0]["range4"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range3"].ToString()) && range <= int.Parse(dt.Rows[0]["range4"].ToString()))
                 {
                     quantity = 3;
                 }
-                else if (range == int.Parse(dt.Rows[0]["range4"].ToString()) && range < int.Parse(dt.Rows[0]["range5"].ToString()))
+                else if (range > int.Parse(dt.Rows[0]["range4"].ToString()) && range <= int.Parse(dt.Rows[0]["range5"].ToString()))
                 {
                     quantity = 4;
                 }

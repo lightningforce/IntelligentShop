@@ -40,6 +40,11 @@
                     </strong>
                 </div>
             </div>
+             <div class="col-md-6">
+                <div class="col-md-12">
+                    <asp:Button ID="btnReset" runat="server" Text="Reset" OnClick="btnReset_Click" CssClass="btn btn-default"/>
+                </div>
+            </div>
         </div>
     </div>
 </asp:Content>

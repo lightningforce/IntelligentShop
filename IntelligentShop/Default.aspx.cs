@@ -16,7 +16,7 @@ namespace IntelligentShop
 {
     public partial class Default : System.Web.UI.Page
     {
-        string _portNo = "3333";
+        string _portNo = "4455";
         private bool _isCheck = true;
         private string _textFromBoard = string.Empty;
         private string _productNameA = string.Empty;
@@ -668,6 +668,17 @@ namespace IntelligentShop
                 totalCartPrice = 0;
             }
             return totalCartPrice;
+        }
+
+        protected void btnReset_Click(object sender, EventArgs e)
+        {
+            using (DataAccess dac = new DataAccess())
+            {
+                dac.Open(Provider.MSSQL);
+                DbCommand cmd = dac.CreateCommand("usp_Reset");
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }
